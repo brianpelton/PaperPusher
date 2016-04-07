@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:PaperPusher.Views"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <StackPanel>
         <TextBox x:Name="Name" />
-    </Grid>
+        <Button x:Name="ChangeName" Content="Change Name"/>
+    </StackPanel>
 </UserControl>
