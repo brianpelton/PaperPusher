@@ -15,6 +15,7 @@ namespace PaperPusher.ViewModels
 
         public MainViewModel()
         {
+            DisplayName = "PaperPusher";
             CurrentDirectory = new DirectoryInfo("c:\\temp\\pdfs");
             TargetRootDirectory = new DirectoryInfo("c:\\temp\\target");
         }
