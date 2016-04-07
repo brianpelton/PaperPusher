@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
+using ImageMagick;
 using PropertyChanged;
 
 namespace PaperPusher.ViewModels
@@ -52,7 +54,22 @@ namespace PaperPusher.ViewModels
 
         private void OnSelectedCurrentFileChanged()
         {
-            //todo: generate pdf preview.
+            if (SelectedCurrentFile == null ||
+                !SelectedCurrentFile.Exists)
+                return;
+
+            var settings = new MagickReadSettings
+            {
+                Density = new Density(100, 100),
+                FrameIndex = 0,
+                FrameCount = 1
+            };
+
+            using (var images = new MagickImageCollection())
+            {
+                images.Read(SelectedCurrentFile, settings);
+                PreviewImage = images.First().ToBitmapSource();
+            }
         }
 
         private void OnTargetRootDirectoryChanged()
