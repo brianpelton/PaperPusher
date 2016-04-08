@@ -13,6 +13,9 @@ namespace PaperPusher.ViewModels
     [ImplementPropertyChanged]
     public class MainViewModel : Screen
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(typeof (MainViewModel));
+
+
         #region [ Constructors ]
 
         public MainViewModel()
@@ -81,9 +84,16 @@ namespace PaperPusher.ViewModels
                 }
             });
 
-            var uri = new Uri(filename);
-            var bitmap = new BitmapImage(uri);
-            PreviewImage = bitmap;
+            try
+            {
+                var uri = new Uri(filename);
+                var bitmap = new BitmapImage(uri);
+                PreviewImage = bitmap;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error generating preview image.", ex);
+            }
         }
 
         private void OnTargetRootDirectoryChanged()
