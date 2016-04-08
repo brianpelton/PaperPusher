@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ImageMagick;
@@ -53,7 +55,7 @@ namespace PaperPusher.ViewModels
                 CurrentFiles.Add(file);
         }
 
-        private void OnSelectedCurrentFileChanged()
+        private async void OnSelectedCurrentFileChanged()
         {
             if (SelectedCurrentFile == null ||
                 !SelectedCurrentFile.Exists)
@@ -66,11 +68,22 @@ namespace PaperPusher.ViewModels
                 FrameCount = 1
             };
 
-            using (var images = new MagickImageCollection())
+            var filename = Path.GetTempFileName();
+            await Task.Run(() =>
             {
-                images.Read(SelectedCurrentFile, settings);
-                PreviewImage = images.First().ToBitmapSource();
-            }
+                using (var images = new MagickImageCollection())
+                {
+                    images.Read(SelectedCurrentFile, settings);
+
+                    var image = images.First();
+                    image.Format = MagickFormat.Jpeg;
+                    images.Write(filename);
+                }
+            });
+
+            var uri = new Uri(filename);
+            var bitmap = new BitmapImage(uri);
+            PreviewImage = bitmap;
         }
 
         private void OnTargetRootDirectoryChanged()
