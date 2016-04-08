@@ -1,12 +1,13 @@
-﻿<controls:MetroWindow x:Class="PaperPusher.Views.MainView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:PaperPusher.Views"
-             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+﻿<mahapps:MetroWindow x:Class="PaperPusher.Views.MainView"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mahapps="http://metro.mahapps.com/winfx/xaml/controls"
+                     xmlns:controls="clr-namespace:PaperPusher.Controls"
+                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                     mc:Ignorable="d"
+                     d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -27,15 +28,24 @@
                  Grid.Row="0" Grid.Column="2"
                  IsReadOnly="True" />
         <ListBox x:Name="CurrentFiles"
-                 Grid.Row="1" Grid.Column="0">
+                 Grid.Row="1" Grid.Column="0"
+                 SelectionChanged="CurrentFiles_OnSelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Image x:Name="PreviewImage"
-               Grid.Row="1" Grid.Column="1" />
+        <controls:ZoomBorder x:Name="ZoomBorder"
+                             Grid.Row="1" Grid.Column="1"
+                             ClipToBounds="True"
+                             Background="Gray">
+            <!--<Image x:Name="PreviewImage" 
+                   />-->
+            <Image
+                Source="{Binding Path=PreviewImage, NotifyOnTargetUpdated=True}"
+                Binding.TargetUpdated="zoomBorder_TargetUpdated" />
+        </controls:ZoomBorder>
         <ListBox x:Name="TargetDirectories"
                  Grid.Row="1" Grid.Column="2">
             <ListBox.ItemTemplate>
@@ -45,4 +55,4 @@
             </ListBox.ItemTemplate>
         </ListBox>
     </Grid>
-</controls:MetroWindow>
+</mahapps:MetroWindow>

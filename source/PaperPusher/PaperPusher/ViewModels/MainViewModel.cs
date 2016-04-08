@@ -35,6 +35,7 @@ namespace PaperPusher.ViewModels
             = new BindingList<FileInfo>();
 
         public BitmapSource PreviewImage { get; private set; }
+        public string PreviewImageFilename { get; private set; }
         public FileInfo SelectedCurrentFile { get; set; }
 
         public BindingList<DirectoryInfo> TargetDirectories { get; protected set; }
@@ -89,6 +90,7 @@ namespace PaperPusher.ViewModels
                 var uri = new Uri(filename);
                 var bitmap = new BitmapImage(uri);
                 PreviewImage = bitmap;
+                PreviewImageFilename = filename;
             }
             catch (Exception ex)
             {
