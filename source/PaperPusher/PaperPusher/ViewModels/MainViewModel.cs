@@ -3,18 +3,24 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ImageMagick;
 using PropertyChanged;
+using ILog = log4net.ILog;
+using LogManager = log4net.LogManager;
 
 namespace PaperPusher.ViewModels
 {
     [ImplementPropertyChanged]
     public class MainViewModel : Screen
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(typeof (MainViewModel));
+        #region [ Logging ]
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof (MainViewModel));
+
+        #endregion
 
         #region [ Constructors ]
 
@@ -34,6 +40,9 @@ namespace PaperPusher.ViewModels
         public BindingList<FileInfo> CurrentFiles { get; protected set; }
             = new BindingList<FileInfo>();
 
+
+        public DateTime? DocumentDate { get; set; }
+        public string DocumentTitle { get; set; }
         public BitmapSource PreviewImage { get; private set; }
         public string PreviewImageFilename { get; private set; }
         public FileInfo SelectedCurrentFile { get; set; }
@@ -42,10 +51,55 @@ namespace PaperPusher.ViewModels
             = new BindingList<DirectoryInfo>();
 
         public DirectoryInfo TargetRootDirectory { get; set; }
+        public DirectoryInfo SelectedTargetDirectory { get; set; }
 
         #endregion
 
         #region [ Methods ]
+
+        public void MoveDocument()
+        {
+            try
+            {
+                var newFilename = Path.Combine(SelectedTargetDirectory.FullName, SelectedCurrentFile.Name);
+                SelectedCurrentFile.MoveTo(newFilename);
+
+                var index = CurrentFiles.IndexOf(SelectedCurrentFile);
+                CurrentFiles.Remove(SelectedCurrentFile);
+                SelectedCurrentFile = CurrentFiles[index];
+
+                DocumentTitle = null;
+                DocumentDate = null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error moving document.", ex);
+                MessageBox.Show("Error:" + ex.Message);
+            }
+        }
+
+        public void RenameAndMoveDocument()
+        {
+            try
+            {
+                var extension = Path.GetExtension(SelectedCurrentFile.Name);
+                var newName = $"{DocumentDate:yyyy.MM.dd} - {DocumentTitle}{extension}";
+                var newFilename = Path.Combine(SelectedTargetDirectory.FullName, newName);
+                SelectedCurrentFile.MoveTo(newFilename);
+
+                var index = CurrentFiles.IndexOf(SelectedCurrentFile);
+                CurrentFiles.Remove(SelectedCurrentFile);
+                SelectedCurrentFile = CurrentFiles[index];
+
+                DocumentTitle = null;
+                DocumentDate = null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error renameing / moving document.", ex);
+                MessageBox.Show("Error:" + ex.Message);
+            }
+        }
 
         private void OnCurrentDirectoryChanged()
         {
