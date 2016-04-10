@@ -5,6 +5,15 @@ namespace PaperPusher.ViewModels
 {
     public class NewFolderViewModel : Screen
     {
+        #region [ Constructors ]
+
+        public NewFolderViewModel()
+        {
+            DisplayName = "PaperPusher";
+        }
+
+        #endregion
+
         #region [ Properties ]
 
         public DirectoryInfo BaseFolder { get; set; }
@@ -14,7 +23,7 @@ namespace PaperPusher.ViewModels
 
         #region [ Methods ]
 
-        public void MakeFolder()
+        public void CreateFolder()
         {
             if (BaseFolder == null ||
                 !BaseFolder.Exists)
