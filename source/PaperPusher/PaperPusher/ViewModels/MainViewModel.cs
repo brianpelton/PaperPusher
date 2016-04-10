@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ImageMagick;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using PaperPusher.Utility;
 using PropertyChanged;
 using ILog = log4net.ILog;
@@ -15,7 +16,7 @@ using LogManager = log4net.LogManager;
 
 namespace PaperPusher.ViewModels
 {
-    [Export(typeof(MainViewModel))]
+    [Export(typeof (MainViewModel))]
     [ImplementPropertyChanged]
     public class MainViewModel : Screen
     {
@@ -59,15 +60,51 @@ namespace PaperPusher.ViewModels
 
         #region [ Methods ]
 
+        public void ChooseSourceDirectory()
+        {
+            var dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            var result = dialog.ShowDialog();
+            if (result != CommonFileDialogResult.Ok)
+                return;
+
+            var directory = new DirectoryInfo(dialog.FileName);
+            if (!directory.Exists)
+                return;
+
+            CurrentDirectory = directory;
+        }
+        public void ChooseTargetRootDirectory()
+        {
+            var dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            var result = dialog.ShowDialog();
+            if (result != CommonFileDialogResult.Ok)
+                return;
+
+            var directory = new DirectoryInfo(dialog.FileName);
+            if (!directory.Exists)
+                return;
+
+            TargetRootDirectory = directory;
+        }
+
         public void CreateDirectory()
         {
             var windowManager = IoC.Get<IWindowManager>();
-            windowManager.ShowDialog(new NewFolderViewModel
+            var vm = new NewFolderViewModel
             {
                 BaseFolder = TargetRootDirectory
-            });
+            };
+            windowManager.ShowDialog(vm);
 
             RefreshDirectories();
+
+            var folder = (from f in TargetDirectories
+                where f.Name == vm.FolderName
+                select f).FirstOrDefault();
+
+            SelectedTargetDirectory = folder;
         }
 
         public void DeleteDocument()

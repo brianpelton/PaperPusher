@@ -19,46 +19,69 @@
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="CurrentDirectory_FullName"
+        <!--<TextBox x:Name="CurrentDirectory_FullName"
                  Grid.Row="0" Grid.Column="0"
-                 IsReadOnly="True" />
+                 IsReadOnly="True"
+                 FontSize="18" />-->
+        <DockPanel Grid.Row="0" Grid.Column="0">
+            <Button x:Name="ChooseSourceDirectory"
+                    DockPanel.Dock="Right">
+                Choose
+            </Button>
+            <TextBox x:Name="CurrentDirectory_FullName"
+                     IsReadOnly="True"
+                     FontSize="18" />
+        </DockPanel>
         <TextBox x:Name="SelectedCurrentFile_Name"
                  Grid.Row="0" Grid.Column="1"
-                 IsReadOnly="True" />
-        <TextBox x:Name="TargetRootDirectory_FullName"
+                 IsReadOnly="True"
+                 FontSize="18" />
+        <!--<TextBox x:Name="TargetRootDirectory_FullName"
                  Grid.Row="0" Grid.Column="2"
-                 IsReadOnly="True" />
+                 IsReadOnly="True"
+                 FontSize="18" />-->
+        <DockPanel Grid.Row="0" Grid.Column="2">
+            <Button x:Name="ChooseTargetRootDirectory"
+                    DockPanel.Dock="Right">
+                Choose
+            </Button>
+            <TextBox x:Name="TargetRootDirectory_FullName"
+                     IsReadOnly="True"
+                     FontSize="18" />
+        </DockPanel>
         <ListBox x:Name="CurrentFiles"
                  Grid.Row="1" Grid.Column="0"
                  SelectionChanged="CurrentFiles_OnSelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding Name}" FontSize="18" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <controls:ZoomBorder x:Name="ZoomBorder"
                              Grid.Row="1" Grid.Column="1"
                              ClipToBounds="True"
+                             Margin="10"
                              Background="Gray">
-            <!--<Image x:Name="PreviewImage" 
-                   />-->
-            <Image
-                Source="{Binding Path=PreviewImage, NotifyOnTargetUpdated=True}"
-                Binding.TargetUpdated="zoomBorder_TargetUpdated" />
+            <Image Source="{Binding Path=PreviewImage, NotifyOnTargetUpdated=True}"
+                   Binding.TargetUpdated="zoomBorder_TargetUpdated" />
         </controls:ZoomBorder>
         <ListBox x:Name="TargetDirectories"
                  Grid.Row="1" Grid.Column="2">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding Name}" FontSize="18" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <DatePicker x:Name="DocumentDate"
-                    Grid.Row="2" Grid.Column="0" />
+                    Grid.Row="2" Grid.Column="0"
+                    FontSize="24"
+                    VerticalContentAlignment="Center" />
         <TextBox x:Name="DocumentTitle"
-                 Grid.Row="2" Grid.Column="1" />
+                 Grid.Row="2" Grid.Column="1"
+                 FontSize="24"
+                 VerticalContentAlignment="Center" />
         <Grid Grid.Row="2" Grid.Column="2"
               Margin="6">
             <Grid.RowDefinitions>
@@ -75,6 +98,8 @@
                     Content="Move" />
             <Button x:Name="RenameAndMoveDocument"
                     Grid.Row="0" Grid.Column="1"
+                    IsDefault="True"
+                    Background="{StaticResource AccentColorBrush}"
                     Margin="4"
                     Content="Rename and Move" />
             <Button x:Name="DeleteDocument"

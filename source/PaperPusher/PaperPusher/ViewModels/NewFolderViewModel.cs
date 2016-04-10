@@ -14,6 +14,11 @@ namespace PaperPusher.ViewModels
 
         #endregion
 
+        public void ChooseSourceDirectory()
+        {
+            int i = 1;
+        }
+
         #region [ Properties ]
 
         public DirectoryInfo BaseFolder { get; set; }

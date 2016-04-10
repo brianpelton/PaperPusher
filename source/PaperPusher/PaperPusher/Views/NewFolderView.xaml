@@ -32,7 +32,11 @@
         <StackPanel Grid.Row="1"
                     Margin="4"
                     Orientation="Horizontal">
-            <Button x:Name="CreateFolder" Content="Accept" Padding="10 6" IsDefault="True" />
+            <Button x:Name="CreateFolder"
+                    Content="Accept"
+                    Padding="10 6"
+                    IsDefault="True"
+                    Background="{StaticResource AccentColorBrush}" />
             <Button x:Name="TryClose" Content="Cancel" Padding="10 6" IsCancel="True" />
         </StackPanel>
     </Grid>
