@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using LogManager = log4net.LogManager;
 
 namespace PaperPusher.ViewModels
 {
+    [Export(typeof(MainViewModel))]
     [ImplementPropertyChanged]
     public class MainViewModel : Screen
     {
