@@ -40,7 +40,7 @@ namespace PaperPusher.ViewModels
 
         public BindingList<FileInfo> CurrentFiles { get; protected set; }
             = new BindingList<FileInfo>();
-        
+
         public DateTime? DocumentDate { get; set; }
         public string DocumentTitle { get; set; }
         public BitmapSource PreviewImage { get; private set; }
@@ -56,6 +56,17 @@ namespace PaperPusher.ViewModels
         #endregion
 
         #region [ Methods ]
+
+        public void CreateDirectory()
+        {
+            var windowManager = IoC.Get<IWindowManager>();
+            windowManager.ShowDialog(new NewFolderViewModel
+            {
+                BaseFolder = TargetRootDirectory
+            });
+
+            RefreshDirectories();
+        }
 
         public void DeleteDocument()
         {
@@ -167,6 +178,11 @@ namespace PaperPusher.ViewModels
         }
 
         private void OnTargetRootDirectoryChanged()
+        {
+            RefreshDirectories();
+        }
+
+        private void RefreshDirectories()
         {
             TargetDirectories.Clear();
 
