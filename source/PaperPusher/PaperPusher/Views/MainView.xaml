@@ -60,16 +60,26 @@
         <TextBox x:Name="DocumentTitle"
                  Grid.Row="2" Grid.Column="1" />
         <Grid Grid.Row="2" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Button x:Name="MoveDocument"
-                    Grid.Column="0"
+                    Grid.Row="0" Grid.Column="0"
+                    Margin="10 10 4 4"
                     Content="Move" />
             <Button x:Name="RenameAndMoveDocument"
-                    Grid.Column="1"
+                    Grid.Row="0" Grid.Column="1"
+                    Margin="4 10 10 4"
                     Content="Rename and Move" />
+            <Button x:Name="DeleteDocument"
+                    Grid.Row="1" Grid.Column="0"
+                    Margin="10 4 4 10"
+                    Content="Delete" />
         </Grid>
     </Grid>
 </mahapps:MetroWindow>

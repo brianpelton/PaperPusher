@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ImageMagick;
+using PaperPusher.Utility;
 using PropertyChanged;
 using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;
@@ -39,23 +40,36 @@ namespace PaperPusher.ViewModels
 
         public BindingList<FileInfo> CurrentFiles { get; protected set; }
             = new BindingList<FileInfo>();
-
-
+        
         public DateTime? DocumentDate { get; set; }
         public string DocumentTitle { get; set; }
         public BitmapSource PreviewImage { get; private set; }
         public string PreviewImageFilename { get; private set; }
         public FileInfo SelectedCurrentFile { get; set; }
+        public DirectoryInfo SelectedTargetDirectory { get; set; }
 
         public BindingList<DirectoryInfo> TargetDirectories { get; protected set; }
             = new BindingList<DirectoryInfo>();
 
         public DirectoryInfo TargetRootDirectory { get; set; }
-        public DirectoryInfo SelectedTargetDirectory { get; set; }
 
         #endregion
 
         #region [ Methods ]
+
+        public void DeleteDocument()
+        {
+            try
+            {
+                SendFileToRecycleBin.RecycleFile(SelectedCurrentFile);
+                AfterAction();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error deleteting document.", ex);
+                MessageBox.Show("Error:" + ex.Message);
+            }
+        }
 
         public void MoveDocument()
         {
@@ -64,12 +78,7 @@ namespace PaperPusher.ViewModels
                 var newFilename = Path.Combine(SelectedTargetDirectory.FullName, SelectedCurrentFile.Name);
                 SelectedCurrentFile.MoveTo(newFilename);
 
-                var index = CurrentFiles.IndexOf(SelectedCurrentFile);
-                CurrentFiles.Remove(SelectedCurrentFile);
-                SelectedCurrentFile = CurrentFiles[index];
-
-                DocumentTitle = null;
-                DocumentDate = null;
+                AfterAction();
             }
             catch (Exception ex)
             {
@@ -87,18 +96,23 @@ namespace PaperPusher.ViewModels
                 var newFilename = Path.Combine(SelectedTargetDirectory.FullName, newName);
                 SelectedCurrentFile.MoveTo(newFilename);
 
-                var index = CurrentFiles.IndexOf(SelectedCurrentFile);
-                CurrentFiles.Remove(SelectedCurrentFile);
-                SelectedCurrentFile = CurrentFiles[index];
-
-                DocumentTitle = null;
-                DocumentDate = null;
+                AfterAction();
             }
             catch (Exception ex)
             {
                 Log.Error("Error renameing / moving document.", ex);
                 MessageBox.Show("Error:" + ex.Message);
             }
+        }
+
+        private void AfterAction()
+        {
+            var index = CurrentFiles.IndexOf(SelectedCurrentFile);
+            CurrentFiles.Remove(SelectedCurrentFile);
+            SelectedCurrentFile = CurrentFiles[index];
+
+            DocumentTitle = null;
+            DocumentDate = null;
         }
 
         private void OnCurrentDirectoryChanged()
