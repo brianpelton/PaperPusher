@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using Caliburn.Micro;
+using PropertyChanged;
 
 namespace PaperPusher.ViewModels
 {
+    [ImplementPropertyChanged]
     public class NewFolderViewModel : Screen
     {
         #region [ Constructors ]
@@ -14,13 +16,9 @@ namespace PaperPusher.ViewModels
 
         #endregion
 
-        public void ChooseSourceDirectory()
-        {
-            int i = 1;
-        }
-
         #region [ Properties ]
 
+        public bool CanCreateFolder => !string.IsNullOrEmpty(FolderName);
         public DirectoryInfo BaseFolder { get; set; }
         public string FolderName { get; set; }
 

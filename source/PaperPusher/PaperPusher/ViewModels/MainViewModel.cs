@@ -39,6 +39,23 @@ namespace PaperPusher.ViewModels
 
         #region [ Properties ]
 
+        public bool CanDeleteDocument => SelectedCurrentFile != null;
+        public bool CanMoveDocument => SelectedCurrentFile != null;
+
+        public bool CanRenameAndMoveDocument
+        {
+            get
+            {
+                if (SelectedCurrentFile == null)
+                    return false;
+
+                if (DocumentTitle == null)
+                    return false;
+
+                return DocumentDate.HasValue;
+            }
+        }
+
         public DirectoryInfo CurrentDirectory { get; set; }
 
         public BindingList<FileInfo> CurrentFiles { get; protected set; }
@@ -74,6 +91,7 @@ namespace PaperPusher.ViewModels
 
             CurrentDirectory = directory;
         }
+
         public void ChooseTargetRootDirectory()
         {
             var dialog = new CommonOpenFileDialog();
