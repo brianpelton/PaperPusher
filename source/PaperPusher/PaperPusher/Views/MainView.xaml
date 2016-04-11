@@ -7,6 +7,10 @@
                      xmlns:controls="clr-namespace:PaperPusher.Controls"
                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                      mc:Ignorable="d"
+                     BorderBrush="{DynamicResource AccentColorBrush}"
+                     BorderThickness="1"
+                     SaveWindowPosition="True"
+                     WindowStartupLocation="CenterScreen"
                      d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
@@ -25,7 +29,8 @@
                  FontSize="18" />-->
         <DockPanel Grid.Row="0" Grid.Column="0">
             <Button x:Name="ChooseSourceDirectory"
-                    DockPanel.Dock="Right">
+                    DockPanel.Dock="Right"
+                    Margin="-2 10 10 10">
                 Choose
             </Button>
             <TextBox x:Name="CurrentDirectory_FullName"
@@ -42,7 +47,8 @@
                  FontSize="18" />-->
         <DockPanel Grid.Row="0" Grid.Column="2">
             <Button x:Name="ChooseTargetRootDirectory"
-                    DockPanel.Dock="Right">
+                    DockPanel.Dock="Right"
+                    Margin="-2 10 10 10">
                 Choose
             </Button>
             <TextBox x:Name="TargetRootDirectory_FullName"
@@ -95,20 +101,24 @@
             <Button x:Name="MoveDocument"
                     Grid.Row="0" Grid.Column="0"
                     Margin="4"
+                    FontSize="14"
                     Content="Move" />
             <Button x:Name="RenameAndMoveDocument"
                     Grid.Row="0" Grid.Column="1"
                     IsDefault="True"
                     Background="{StaticResource AccentColorBrush}"
                     Margin="4"
+                    FontSize="14"
                     Content="Rename and Move" />
             <Button x:Name="DeleteDocument"
                     Grid.Row="1" Grid.Column="0"
                     Margin="4"
+                    FontSize="14"
                     Content="Delete" />
             <Button x:Name="CreateDirectory"
                     Grid.Row="1" Grid.Column="1"
                     Margin="4"
+                    FontSize="14"
                     Content="Create Directory" />
         </Grid>
     </Grid>
