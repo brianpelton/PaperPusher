@@ -211,13 +211,22 @@ namespace PaperPusher.ViewModels
             var filename = Path.GetTempFileName();
             await Task.Run(() =>
             {
-                using (var images = new MagickImageCollection())
+                try
                 {
-                    images.Read(SelectedCurrentFile, settings);
+                    using (var images = new MagickImageCollection())
+                    {
+                        images.Read(SelectedCurrentFile, settings);
 
-                    var image = images.First();
-                    image.Format = MagickFormat.Jpeg;
-                    images.Write(filename);
+                        var image = images.First();
+                        image.Format = MagickFormat.Jpeg;
+                        images.Write(filename);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn("Unable to preview document.", ex);
+                    PreviewImage = null;
+                    PreviewImageFilename = null;
                 }
             });
 
