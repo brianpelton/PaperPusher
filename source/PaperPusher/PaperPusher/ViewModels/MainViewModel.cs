@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
+using iTextSharp.text.pdf;
 using ImageMagick;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using PaperPusher.Utility;
@@ -66,6 +67,7 @@ namespace PaperPusher.ViewModels
         public BitmapSource PreviewImage { get; private set; }
         public string PreviewImageFilename { get; private set; }
         public FileInfo SelectedCurrentFile { get; set; }
+        public int SelectedFilePageCount { get; private set; }
         public DirectoryInfo SelectedTargetDirectory { get; set; }
 
         public BindingList<DirectoryInfo> TargetDirectories { get; protected set; }
@@ -227,6 +229,18 @@ namespace PaperPusher.ViewModels
                     Log.Warn("Unable to preview document.", ex);
                     PreviewImage = null;
                     PreviewImageFilename = null;
+                    SelectedFilePageCount = 0;
+                }
+
+                try
+                {
+                    var pdfReader = new PdfReader(SelectedCurrentFile.FullName);
+                    SelectedFilePageCount = pdfReader.NumberOfPages;
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn("Unable to count pages.", ex);
+                    SelectedFilePageCount = 0;
                 }
             });
 
