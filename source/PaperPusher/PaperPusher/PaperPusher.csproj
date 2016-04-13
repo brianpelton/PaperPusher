@@ -106,6 +106,7 @@
     <Compile Include="ApplicationBootstrapper.cs" />
     <Compile Include="Controls\ZoomBorder.cs" />
     <Compile Include="IOperation.cs" />
+    <Compile Include="CaliburnLog4netLogger.cs" />
     <Compile Include="MoveOperation.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Utility\SendFileToRecycleBin.cs" />

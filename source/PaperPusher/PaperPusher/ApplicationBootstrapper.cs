@@ -21,6 +21,7 @@ namespace PaperPusher
 
         public ApplicationBootstrapper()
         {
+            LogManager.GetLog = type => new CaliburnLog4netLogger(type);
             Initialize();
         }
 
