@@ -101,6 +101,9 @@ namespace PaperPusher.ViewModels
             };
             windowManager.ShowDialog(vm);
 
+            if (vm.NewFolder == null)
+                return;
+
             RefreshDirectories();
 
             var folder = (from f in TargetDirectories

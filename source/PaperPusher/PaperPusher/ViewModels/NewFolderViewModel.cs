@@ -21,6 +21,7 @@ namespace PaperPusher.ViewModels
         public bool CanCreateFolder => !string.IsNullOrEmpty(FolderName);
         public DirectoryInfo BaseFolder { get; set; }
         public string FolderName { get; set; }
+        public DirectoryInfo NewFolder { get; private set; }
 
         #endregion
 
@@ -32,8 +33,8 @@ namespace PaperPusher.ViewModels
                 !BaseFolder.Exists)
                 return;
 
-            var newFolder = Path.Combine(BaseFolder.FullName, FolderName);
-            Directory.CreateDirectory(newFolder);
+            var path = Path.Combine(BaseFolder.FullName, FolderName);
+            NewFolder = Directory.CreateDirectory(path);
 
             TryClose(true);
         }
