@@ -165,6 +165,13 @@ namespace PaperPusher.ViewModels
         {
             var index = SourceFiles.IndexOf(SelectedSourceFile);
             SourceFiles.Remove(SelectedSourceFile);
+
+            if (SourceFiles.Count == index)
+                index = SourceFiles.Count - 1;
+
+            if (SourceFiles.Count == 0)
+                return;
+
             SelectedSourceFile = SourceFiles[index];
 
             DocumentTitle = null;
