@@ -29,7 +29,7 @@
                     Margin="-2 10 10 10">
                 Choose
             </Button>
-            <TextBox x:Name="CurrentDirectory_FullName"
+            <TextBox x:Name="SourceDirectory_FullName"
                      IsReadOnly="True"
                      FontSize="18" />
         </DockPanel>
@@ -38,7 +38,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="SelectedCurrentFile_Name"
+            <TextBox x:Name="SelectedSourceFile_Name"
                  Grid.Column="0"
                  IsReadOnly="True"
                  FontSize="18" />
@@ -57,9 +57,10 @@
                      IsReadOnly="True"
                      FontSize="18" />
         </DockPanel>
-        <ListBox x:Name="CurrentFiles"
+        <ListBox x:Name="SourceFiles"
                  Grid.Row="1" Grid.Column="0"
-                 SelectionChanged="CurrentFiles_OnSelectionChanged">
+                 SelectionChanged="SourceFiles_OnSelectionChanged"
+                 ScrollViewer.CanContentScroll="False">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" FontSize="18" />

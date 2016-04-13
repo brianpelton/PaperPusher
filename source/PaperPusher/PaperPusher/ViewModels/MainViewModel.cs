@@ -32,7 +32,7 @@ namespace PaperPusher.ViewModels
         public MainViewModel()
         {
             DisplayName = "PaperPusher";
-            CurrentDirectory = new DirectoryInfo("c:\\temp\\pdfs");
+            SourceDirectory = new DirectoryInfo("c:\\temp\\pdfs");
             TargetRootDirectory = new DirectoryInfo("c:\\temp\\target");
         }
 
@@ -40,14 +40,14 @@ namespace PaperPusher.ViewModels
 
         #region [ Properties ]
 
-        public bool CanDeleteDocument => SelectedCurrentFile != null;
-        public bool CanMoveDocument => SelectedCurrentFile != null;
+        public bool CanDeleteDocument => SelectedSourceFile != null;
+        public bool CanMoveDocument => SelectedSourceFile != null;
 
         public bool CanRenameAndMoveDocument
         {
             get
             {
-                if (SelectedCurrentFile == null)
+                if (SelectedSourceFile == null)
                     return false;
 
                 if (DocumentTitle == null)
@@ -57,18 +57,17 @@ namespace PaperPusher.ViewModels
             }
         }
 
-        public DirectoryInfo CurrentDirectory { get; set; }
-
-        public BindingList<FileInfo> CurrentFiles { get; protected set; }
-            = new BindingList<FileInfo>();
-
         public DateTime? DocumentDate { get; set; }
         public string DocumentTitle { get; set; }
         public BitmapSource PreviewImage { get; private set; }
         public string PreviewImageFilename { get; private set; }
-        public FileInfo SelectedCurrentFile { get; set; }
         public int SelectedFilePageCount { get; private set; }
+        public FileInfo SelectedSourceFile { get; set; }
         public DirectoryInfo SelectedTargetDirectory { get; set; }
+        public DirectoryInfo SourceDirectory { get; set; }
+
+        public BindingList<FileInfo> SourceFiles { get; protected set; }
+            = new BindingList<FileInfo>();
 
         public BindingList<DirectoryInfo> TargetDirectories { get; protected set; }
             = new BindingList<DirectoryInfo>();
@@ -83,7 +82,7 @@ namespace PaperPusher.ViewModels
         {
             var directory = ChooseDirectory();
             if (directory != null)
-                CurrentDirectory = directory;
+                SourceDirectory = directory;
         }
 
         public void ChooseTargetRootDirectory()
@@ -115,7 +114,7 @@ namespace PaperPusher.ViewModels
         {
             try
             {
-                SendFileToRecycleBin.RecycleFile(SelectedCurrentFile);
+                SendFileToRecycleBin.RecycleFile(SelectedSourceFile);
                 AfterAction();
             }
             catch (Exception ex)
@@ -129,8 +128,8 @@ namespace PaperPusher.ViewModels
         {
             try
             {
-                var newFilename = Path.Combine(SelectedTargetDirectory.FullName, SelectedCurrentFile.Name);
-                SelectedCurrentFile.MoveTo(newFilename);
+                var newFilename = Path.Combine(SelectedTargetDirectory.FullName, SelectedSourceFile.Name);
+                SelectedSourceFile.MoveTo(newFilename);
 
                 AfterAction();
             }
@@ -145,10 +144,10 @@ namespace PaperPusher.ViewModels
         {
             try
             {
-                var extension = Path.GetExtension(SelectedCurrentFile.Name);
+                var extension = Path.GetExtension(SelectedSourceFile.Name);
                 var newName = $"{DocumentDate:yyyy.MM.dd} - {DocumentTitle}{extension}";
                 var newFilename = Path.Combine(SelectedTargetDirectory.FullName, newName);
-                SelectedCurrentFile.MoveTo(newFilename);
+                SelectedSourceFile.MoveTo(newFilename);
 
                 AfterAction();
             }
@@ -161,9 +160,9 @@ namespace PaperPusher.ViewModels
 
         private void AfterAction()
         {
-            var index = CurrentFiles.IndexOf(SelectedCurrentFile);
-            CurrentFiles.Remove(SelectedCurrentFile);
-            SelectedCurrentFile = CurrentFiles[index];
+            var index = SourceFiles.IndexOf(SelectedSourceFile);
+            SourceFiles.Remove(SelectedSourceFile);
+            SelectedSourceFile = SourceFiles[index];
 
             DocumentTitle = null;
             DocumentDate = null;
@@ -186,22 +185,22 @@ namespace PaperPusher.ViewModels
             return directory;
         }
 
-        private void OnCurrentDirectoryChanged()
+        private void OnSourceDirectoryChanged()
         {
-            CurrentFiles.Clear();
+            SourceFiles.Clear();
 
-            if (CurrentDirectory == null ||
-                !CurrentDirectory.Exists)
+            if (SourceDirectory == null ||
+                !SourceDirectory.Exists)
                 return;
 
-            foreach (var file in CurrentDirectory.GetFiles())
-                CurrentFiles.Add(file);
+            foreach (var file in SourceDirectory.GetFiles())
+                SourceFiles.Add(file);
         }
 
-        private async void OnSelectedCurrentFileChanged()
+        private async void OnSelectedSourceFileChanged()
         {
-            if (SelectedCurrentFile == null ||
-                !SelectedCurrentFile.Exists)
+            if (SelectedSourceFile == null ||
+                !SelectedSourceFile.Exists)
                 return;
 
             var settings = new MagickReadSettings
@@ -218,7 +217,7 @@ namespace PaperPusher.ViewModels
                 {
                     using (var images = new MagickImageCollection())
                     {
-                        images.Read(SelectedCurrentFile, settings);
+                        images.Read(SelectedSourceFile, settings);
 
                         var image = images.First();
                         image.Format = MagickFormat.Jpeg;
@@ -235,7 +234,7 @@ namespace PaperPusher.ViewModels
 
                 try
                 {
-                    var pdfReader = new PdfReader(SelectedCurrentFile.FullName);
+                    var pdfReader = new PdfReader(SelectedSourceFile.FullName);
                     SelectedFilePageCount = pdfReader.NumberOfPages;
                 }
                 catch (Exception ex)

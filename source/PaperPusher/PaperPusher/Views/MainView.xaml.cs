@@ -16,7 +16,7 @@ namespace PaperPusher.Views
 
         #region [ Methods ]
 
-        private void CurrentFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SourceFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // this is okay, but it fires too early.
             //ZoomBorder.Reset();
