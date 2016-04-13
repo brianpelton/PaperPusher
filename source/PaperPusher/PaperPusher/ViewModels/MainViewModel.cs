@@ -131,8 +131,10 @@ namespace PaperPusher.ViewModels
         {
             try
             {
-                var newFilename = Path.Combine(SelectedTargetDirectory.FullName, SelectedSourceFile.Name);
-                SelectedSourceFile.MoveTo(newFilename);
+                var filename = Path.Combine(SelectedTargetDirectory.FullName, SelectedSourceFile.Name);
+                var newFile = new FileInfo(filename);
+                var operation = new MoveOperation(SelectedSourceFile, newFile);
+                Session.DoOperation(operation);
 
                 AfterAction();
             }
@@ -195,18 +197,6 @@ namespace PaperPusher.ViewModels
             return directory;
         }
 
-        private void OnSourceDirectoryChanged()
-        {
-            SourceFiles.Clear();
-
-            if (SourceDirectory == null ||
-                !SourceDirectory.Exists)
-                return;
-
-            foreach (var file in SourceDirectory.GetFiles())
-                SourceFiles.Add(file);
-        }
-
         private async void OnSelectedSourceFileChanged()
         {
             if (SelectedSourceFile == null ||
@@ -265,6 +255,18 @@ namespace PaperPusher.ViewModels
             {
                 Log.Error("Error generating preview image.", ex);
             }
+        }
+
+        private void OnSourceDirectoryChanged()
+        {
+            SourceFiles.Clear();
+
+            if (SourceDirectory == null ||
+                !SourceDirectory.Exists)
+                return;
+
+            foreach (var file in SourceDirectory.GetFiles())
+                SourceFiles.Add(file);
         }
 
         private void OnTargetRootDirectoryChanged()
