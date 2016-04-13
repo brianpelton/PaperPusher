@@ -81,32 +81,16 @@ namespace PaperPusher.ViewModels
 
         public void ChooseSourceDirectory()
         {
-            var dialog = new CommonOpenFileDialog();
-            dialog.IsFolderPicker = true;
-            var result = dialog.ShowDialog();
-            if (result != CommonFileDialogResult.Ok)
-                return;
-
-            var directory = new DirectoryInfo(dialog.FileName);
-            if (!directory.Exists)
-                return;
-
-            CurrentDirectory = directory;
+            var directory = ChooseDirectory();
+            if (directory != null)
+                CurrentDirectory = directory;
         }
 
         public void ChooseTargetRootDirectory()
         {
-            var dialog = new CommonOpenFileDialog();
-            dialog.IsFolderPicker = true;
-            var result = dialog.ShowDialog();
-            if (result != CommonFileDialogResult.Ok)
-                return;
-
-            var directory = new DirectoryInfo(dialog.FileName);
-            if (!directory.Exists)
-                return;
-
-            TargetRootDirectory = directory;
+            var directory = ChooseDirectory();
+            if (directory != null)
+                TargetRootDirectory = directory;
         }
 
         public void CreateDirectory()
@@ -183,6 +167,23 @@ namespace PaperPusher.ViewModels
 
             DocumentTitle = null;
             DocumentDate = null;
+        }
+
+        private DirectoryInfo ChooseDirectory()
+        {
+            var dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true
+            };
+            var result = dialog.ShowDialog();
+            if (result != CommonFileDialogResult.Ok)
+                return null;
+
+            var directory = new DirectoryInfo(dialog.FileName);
+            if (!directory.Exists)
+                return null;
+
+            return directory;
         }
 
         private void OnCurrentDirectoryChanged()
