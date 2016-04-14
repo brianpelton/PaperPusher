@@ -105,6 +105,13 @@
     </ApplicationDefinition>
     <Compile Include="ApplicationBootstrapper.cs" />
     <Compile Include="Controls\ZoomBorder.cs" />
+    <Compile Include="DeleteOperation.cs" />
+    <Compile Include="IOperation.cs" />
+    <Compile Include="CaliburnLog4netLogger.cs" />
+    <Compile Include="MoveOperation.cs" />
+    <Compile Include="RenameAndMoveOperation.cs" />
+    <Compile Include="Session.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Utility\SendFileToRecycleBin.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\NewFolderViewModel.cs" />

@@ -10,7 +10,6 @@ using Caliburn.Micro;
 using iTextSharp.text.pdf;
 using ImageMagick;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using PaperPusher.Utility;
 using PropertyChanged;
 using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;
@@ -41,7 +40,7 @@ namespace PaperPusher.ViewModels
         #region [ Properties ]
 
         public bool CanDeleteDocument => SelectedSourceFile != null;
-        public bool CanMoveDocument => SelectedSourceFile != null;
+        public bool CanMoveDocument => SelectedSourceFile != null && SelectedTargetDirectory != null;
 
         public bool CanRenameAndMoveDocument
         {
@@ -53,7 +52,10 @@ namespace PaperPusher.ViewModels
                 if (DocumentTitle == null)
                     return false;
 
-                return DocumentDate.HasValue;
+                if (DocumentDate == null)
+                    return false;
+
+                return SelectedTargetDirectory != null;
             }
         }
 
@@ -117,7 +119,9 @@ namespace PaperPusher.ViewModels
         {
             try
             {
-                SendFileToRecycleBin.RecycleFile(SelectedSourceFile);
+                var action = new DeleteOperation(
+                    SelectedSourceFile);
+                Session.DoOperation(action);
                 AfterAction();
             }
             catch (Exception ex)
@@ -131,8 +135,10 @@ namespace PaperPusher.ViewModels
         {
             try
             {
-                var newFilename = Path.Combine(SelectedTargetDirectory.FullName, SelectedSourceFile.Name);
-                SelectedSourceFile.MoveTo(newFilename);
+                var filename = Path.Combine(SelectedTargetDirectory.FullName, SelectedSourceFile.Name);
+                var newFile = new FileInfo(filename);
+                var operation = new MoveOperation(SelectedSourceFile, newFile);
+                Session.DoOperation(operation);
 
                 AfterAction();
             }
@@ -143,14 +149,22 @@ namespace PaperPusher.ViewModels
             }
         }
 
+        public void RedoLastUndo()
+        {
+            Session.Redo();
+            OnSourceDirectoryChanged();
+        }
+
         public void RenameAndMoveDocument()
         {
             try
             {
                 var extension = Path.GetExtension(SelectedSourceFile.Name);
-                var newName = $"{DocumentDate:yyyy.MM.dd} - {DocumentTitle}{extension}";
-                var newFilename = Path.Combine(SelectedTargetDirectory.FullName, newName);
-                SelectedSourceFile.MoveTo(newFilename);
+                var filename = $"{DocumentDate:yyyy.MM.dd} - {DocumentTitle}{extension}";
+                var fullFilename = Path.Combine(SelectedTargetDirectory.FullName, filename);
+                var newFile = new FileInfo(fullFilename);
+                var operation = new RenameAndMoveOperation(SelectedSourceFile, newFile);
+                Session.DoOperation(operation);
 
                 AfterAction();
             }
@@ -159,6 +173,12 @@ namespace PaperPusher.ViewModels
                 Log.Error("Error renameing / moving document.", ex);
                 MessageBox.Show("Error:" + ex.Message);
             }
+        }
+
+        public void UndoLastOperation()
+        {
+            Session.Undo();
+            OnSourceDirectoryChanged();
         }
 
         private void AfterAction()
@@ -193,18 +213,6 @@ namespace PaperPusher.ViewModels
                 return null;
 
             return directory;
-        }
-
-        private void OnSourceDirectoryChanged()
-        {
-            SourceFiles.Clear();
-
-            if (SourceDirectory == null ||
-                !SourceDirectory.Exists)
-                return;
-
-            foreach (var file in SourceDirectory.GetFiles())
-                SourceFiles.Add(file);
         }
 
         private async void OnSelectedSourceFileChanged()
@@ -244,8 +252,8 @@ namespace PaperPusher.ViewModels
 
                 try
                 {
-                    var pdfReader = new PdfReader(SelectedSourceFile.FullName);
-                    SelectedFilePageCount = pdfReader.NumberOfPages;
+                    using (var pdfReader = new PdfReader(SelectedSourceFile.FullName))
+                        SelectedFilePageCount = pdfReader.NumberOfPages;
                 }
                 catch (Exception ex)
                 {
@@ -265,6 +273,18 @@ namespace PaperPusher.ViewModels
             {
                 Log.Error("Error generating preview image.", ex);
             }
+        }
+
+        private void OnSourceDirectoryChanged()
+        {
+            SourceFiles.Clear();
+
+            if (SourceDirectory == null ||
+                !SourceDirectory.Exists)
+                return;
+
+            foreach (var file in SourceDirectory.GetFiles())
+                SourceFiles.Add(file);
         }
 
         private void OnTargetRootDirectoryChanged()
