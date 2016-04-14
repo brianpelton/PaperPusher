@@ -109,6 +109,7 @@
     <Compile Include="IOperation.cs" />
     <Compile Include="CaliburnLog4netLogger.cs" />
     <Compile Include="MoveOperation.cs" />
+    <Compile Include="RenameAndMoveOperation.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\SendFileToRecycleBin.cs" />

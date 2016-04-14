@@ -3,23 +3,22 @@ using System.IO;
 
 namespace PaperPusher
 {
-    public class DeleteOperation : IOperation
+    public class RenameAndMoveOperation : IOperation
     {
         #region [ Constructors ]
 
-        public DeleteOperation(FileInfo originalFile)
+        public RenameAndMoveOperation(FileInfo originalFile, FileInfo newFile)
         {
             OriginalFile = originalFile;
-            var filename = Path.Combine(Settings.TrashBinPath, originalFile.Name);
-            TrashFile = new FileInfo(filename);
+            NewFile = newFile;
         }
 
         #endregion
 
         #region [ Properties ]
 
-        public string Description => $"Delete '{OriginalFile.Name}'";
-        public FileInfo TrashFile { get; }
+        public string Description => $"Rename '{OriginalFile.Name}' to '{NewFile.Name}'";
+        public FileInfo NewFile { get; }
         public FileInfo OriginalFile { get; }
 
         #endregion
@@ -28,12 +27,12 @@ namespace PaperPusher
 
         public void Do()
         {
-            OriginalFile.MoveTo(TrashFile.FullName);
+            OriginalFile.MoveTo(NewFile.FullName);
         }
 
         public void Undo()
         {
-            TrashFile.MoveTo(OriginalFile.FullName);
+            NewFile.MoveTo(OriginalFile.FullName);
         }
 
         #endregion

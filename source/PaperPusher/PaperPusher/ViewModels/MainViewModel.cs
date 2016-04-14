@@ -117,7 +117,9 @@ namespace PaperPusher.ViewModels
         {
             try
             {
-                SendFileToRecycleBin.RecycleFile(SelectedSourceFile);
+                var action = new DeleteOperation(
+                    SelectedSourceFile);
+                Session.DoOperation(action);
                 AfterAction();
             }
             catch (Exception ex)
@@ -150,9 +152,11 @@ namespace PaperPusher.ViewModels
             try
             {
                 var extension = Path.GetExtension(SelectedSourceFile.Name);
-                var newName = $"{DocumentDate:yyyy.MM.dd} - {DocumentTitle}{extension}";
-                var newFilename = Path.Combine(SelectedTargetDirectory.FullName, newName);
-                SelectedSourceFile.MoveTo(newFilename);
+                var filename = $"{DocumentDate:yyyy.MM.dd} - {DocumentTitle}{extension}";
+                var fullFilename = Path.Combine(SelectedTargetDirectory.FullName, filename);
+                var newFile = new FileInfo(fullFilename);
+                var operation = new RenameAndMoveOperation(SelectedSourceFile, newFile);
+                Session.DoOperation(operation);
 
                 AfterAction();
             }
