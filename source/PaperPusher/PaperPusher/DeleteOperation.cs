@@ -28,12 +28,12 @@ namespace PaperPusher
 
         public void Do()
         {
-            OriginalFile.MoveTo(TrashFile.FullName);
+            File.Move(OriginalFile.FullName, TrashFile.FullName);
         }
 
         public void Undo()
         {
-            TrashFile.MoveTo(OriginalFile.FullName);
+            File.Move(TrashFile.FullName, OriginalFile.FullName);
         }
 
         #endregion

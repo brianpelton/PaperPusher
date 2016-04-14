@@ -10,7 +10,6 @@ using Caliburn.Micro;
 using iTextSharp.text.pdf;
 using ImageMagick;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using PaperPusher.Utility;
 using PropertyChanged;
 using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;
@@ -150,6 +149,12 @@ namespace PaperPusher.ViewModels
             }
         }
 
+        public void RedoLastUndo()
+        {
+            Session.Redo();
+            OnSourceDirectoryChanged();
+        }
+
         public void RenameAndMoveDocument()
         {
             try
@@ -168,6 +173,12 @@ namespace PaperPusher.ViewModels
                 Log.Error("Error renameing / moving document.", ex);
                 MessageBox.Show("Error:" + ex.Message);
             }
+        }
+
+        public void UndoLastOperation()
+        {
+            Session.Undo();
+            OnSourceDirectoryChanged();
         }
 
         private void AfterAction()
@@ -241,8 +252,8 @@ namespace PaperPusher.ViewModels
 
                 try
                 {
-                    var pdfReader = new PdfReader(SelectedSourceFile.FullName);
-                    SelectedFilePageCount = pdfReader.NumberOfPages;
+                    using (var pdfReader = new PdfReader(SelectedSourceFile.FullName))
+                        SelectedFilePageCount = pdfReader.NumberOfPages;
                 }
                 catch (Exception ex)
                 {
