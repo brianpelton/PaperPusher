@@ -41,7 +41,7 @@ namespace PaperPusher.ViewModels
         #region [ Properties ]
 
         public bool CanDeleteDocument => SelectedSourceFile != null;
-        public bool CanMoveDocument => SelectedSourceFile != null;
+        public bool CanMoveDocument => SelectedSourceFile != null && SelectedTargetDirectory != null;
 
         public bool CanRenameAndMoveDocument
         {
@@ -53,7 +53,10 @@ namespace PaperPusher.ViewModels
                 if (DocumentTitle == null)
                     return false;
 
-                return DocumentDate.HasValue;
+                if (DocumentDate == null)
+                    return false;
+
+                return SelectedTargetDirectory != null;
             }
         }
 
