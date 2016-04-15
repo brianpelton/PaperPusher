@@ -6,4 +6,4 @@ It does this by showing you a preview of the PDF while keeping the PDf file unlo
 
 ## Requirements
 
-* GhostScript: ([download link])(http://www.ghostscript.com/download/gsdnld.html)
+* GhostScript: [download link](http://www.ghostscript.com/download/gsdnld.html)
