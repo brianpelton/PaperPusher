@@ -170,6 +170,13 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Art\invalid_file.png" />
+    <Resource Include="Art\unknown_icon_128.png" />
+    <Resource Include="Art\unknown_icon_256.png" />
+    <Resource Include="Art\unknown_icon_512.png" />
+    <Resource Include="Art\unknown_icon_64.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.29.2\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
