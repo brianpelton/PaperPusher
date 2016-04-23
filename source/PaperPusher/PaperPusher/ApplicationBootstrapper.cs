@@ -75,6 +75,14 @@ namespace PaperPusher
             DisplayRootViewFor<MainViewModel>();
         }
 
+        protected override void OnExit(object sender, EventArgs e)
+        {
+            base.OnExit(sender, e);
+
+            Properties.Settings.Default.SourceDirectory = Settings.InitialSourceDirectory;
+            Properties.Settings.Default.TargetRootDirectory = Settings.InitialTargetRootDirectory;
+        }
+
         #endregion
     }
 }

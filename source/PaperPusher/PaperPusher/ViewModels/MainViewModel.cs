@@ -31,8 +31,8 @@ namespace PaperPusher.ViewModels
         public MainViewModel()
         {
             DisplayName = "PaperPusher";
-            SourceDirectory = new DirectoryInfo("c:\\temp\\pdfs");
-            TargetRootDirectory = new DirectoryInfo("c:\\temp\\target");
+            SourceDirectory = new DirectoryInfo(Settings.InitialSourceDirectory);
+            TargetRootDirectory = new DirectoryInfo(Settings.InitialTargetRootDirectory);
         }
 
         #endregion
@@ -179,6 +179,15 @@ namespace PaperPusher.ViewModels
         {
             Session.Undo();
             OnSourceDirectoryChanged();
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            base.OnDeactivate(close);
+
+            Settings.InitialSourceDirectory = SourceDirectory.FullName;
+            Settings.InitialTargetRootDirectory = TargetRootDirectory.FullName;
+            Settings.Save();
         }
 
         private void AfterAction()
