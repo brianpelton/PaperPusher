@@ -278,9 +278,20 @@ namespace PaperPusher.ViewModels
                 PreviewImage = bitmap;
                 PreviewImageFilename = filename;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Log.Error("Error generating preview image.", ex);
+                Log.Warn("Unable to preview selected document.");
+
+                try
+                {
+                    var uri = new Uri("pack://application:,,,/PaperPusher;component/Art/unknown_icon_512.png");
+                    var bitmap = new BitmapImage(uri);
+                    PreviewImage = bitmap;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error showing unknown file icon.", ex);
+                }
             }
         }
 
