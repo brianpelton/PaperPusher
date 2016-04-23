@@ -10,6 +10,7 @@ using Caliburn.Micro;
 using iTextSharp.text.pdf;
 using ImageMagick;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using PaperPusher.Operations;
 using PropertyChanged;
 using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;

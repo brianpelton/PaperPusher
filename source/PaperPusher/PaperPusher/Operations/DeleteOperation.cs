@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PaperPusher
+namespace PaperPusher.Operations
 {
     public class DeleteOperation : IOperation
     {

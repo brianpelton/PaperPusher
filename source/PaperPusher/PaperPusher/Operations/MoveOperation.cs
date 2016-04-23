@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 
-namespace PaperPusher
+namespace PaperPusher.Operations
 {
-    public class RenameAndMoveOperation : IOperation
+    public class MoveOperation : IOperation
     {
         #region [ Constructors ]
 
-        public RenameAndMoveOperation(FileInfo originalFile, FileInfo newFile)
+        public MoveOperation(FileInfo originalFile, FileInfo newFile)
         {
             OriginalFile = originalFile;
             NewFile = newFile;
@@ -17,7 +17,7 @@ namespace PaperPusher
 
         #region [ Properties ]
 
-        public string Description => $"Rename '{OriginalFile.Name}' to '{NewFile.Name}'";
+        public string Description => $"Move '{OriginalFile.Name}' to '{NewFile.Name}'";
         public FileInfo NewFile { get; }
         public FileInfo OriginalFile { get; }
 
