@@ -8,5 +8,8 @@
     <Setting Name="TargetRootDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="TrashFolderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\temp\PaperPusherTrash</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

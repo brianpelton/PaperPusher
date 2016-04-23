@@ -79,8 +79,8 @@ namespace PaperPusher
         {
             base.OnExit(sender, e);
 
-            Properties.Settings.Default.SourceDirectory = Settings.InitialSourceDirectory;
-            Properties.Settings.Default.TargetRootDirectory = Settings.InitialTargetRootDirectory;
+            Properties.Settings.Default.SourceDirectory = Settings.SourceDirectory;
+            Properties.Settings.Default.TargetRootDirectory = Settings.TargetRootDirectory;
         }
 
         #endregion

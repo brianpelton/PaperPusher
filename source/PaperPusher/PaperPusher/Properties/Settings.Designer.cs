@@ -46,5 +46,17 @@ namespace PaperPusher.Properties {
                 this["TargetRootDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\temp\\PaperPusherTrash")]
+        public string TrashFolderName {
+            get {
+                return ((string)(this["TrashFolderName"]));
+            }
+            set {
+                this["TrashFolderName"] = value;
+            }
+        }
     }
 }

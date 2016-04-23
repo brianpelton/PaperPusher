@@ -2,20 +2,24 @@
 
 namespace PaperPusher
 {
+    /// <summary>
+    ///     Application Settings backed by Properties.Settings
+    /// </summary>
     public static class Settings
     {
         #region [ Constructors ]
 
         static Settings()
         {
-            InitialSourceDirectory = Properties.Settings.Default.SourceDirectory;
-            InitialTargetRootDirectory = Properties.Settings.Default.TargetRootDirectory;
+            SourceDirectory = Properties.Settings.Default.SourceDirectory;
+            TargetRootDirectory = Properties.Settings.Default.TargetRootDirectory;
+            TrashFolder = Properties.Settings.Default.TrashFolderName;
 
-            if (string.IsNullOrEmpty(InitialSourceDirectory))
-                InitialSourceDirectory = Environment.CurrentDirectory;
+            if (string.IsNullOrEmpty(SourceDirectory))
+                SourceDirectory = Environment.CurrentDirectory;
 
-            if (string.IsNullOrEmpty(InitialTargetRootDirectory))
-                InitialTargetRootDirectory = Environment.CurrentDirectory;
+            if (string.IsNullOrEmpty(TargetRootDirectory))
+                TargetRootDirectory = Environment.CurrentDirectory;
         }
 
         #endregion
@@ -30,18 +34,18 @@ namespace PaperPusher
         /// <summary>
         ///     The path to the folder that contains files to sort / preview.
         /// </summary>
-        public static string InitialSourceDirectory { get; set; }
+        public static string SourceDirectory { get; set; }
 
         /// <summary>
         ///     The path to the root folder that contains folders to sort files into.
         /// </summary>
-        public static string InitialTargetRootDirectory { get; set; }
+        public static string TargetRootDirectory { get; set; }
 
         /// <summary>
-        ///     Location to move deleted files. This location
-        ///     can be set to delete its content on exit.
+        /// Path to the folder to move files
+        /// when they are requested to be deleted.
         /// </summary>
-        public static string TrashBinPath { get; set; } = "c:\\temp\\trash";
+        public static string TrashFolder { get; set; } 
 
         #endregion
 
@@ -49,8 +53,9 @@ namespace PaperPusher
 
         public static void Save()
         {
-            Properties.Settings.Default.SourceDirectory = InitialSourceDirectory;
-            Properties.Settings.Default.TargetRootDirectory = InitialTargetRootDirectory;
+            Properties.Settings.Default.SourceDirectory = SourceDirectory;
+            Properties.Settings.Default.TargetRootDirectory = TargetRootDirectory;
+            Properties.Settings.Default.TrashFolderName = TrashFolder;
             Properties.Settings.Default.Save();
         }
 

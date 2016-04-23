@@ -3,6 +3,11 @@ using System.IO;
 
 namespace PaperPusher.Operations
 {
+    /// <summary>
+    /// Delete the given file.
+    /// PaperPusher does not actually delete the file from disk, but moves
+    /// it to a trash folder in the TartgetRootFolder.
+    /// </summary>
     public class DeleteOperation : IOperation
     {
         #region [ Constructors ]
@@ -10,7 +15,7 @@ namespace PaperPusher.Operations
         public DeleteOperation(FileInfo originalFile)
         {
             OriginalFile = originalFile;
-            var filename = Path.Combine(Settings.TrashBinPath, originalFile.Name);
+            var filename = Path.Combine(Settings.TrashFolder, originalFile.Name);
             TrashFile = new FileInfo(filename);
         }
 
@@ -28,6 +33,8 @@ namespace PaperPusher.Operations
 
         public void Do()
         {
+            if (!Directory.Exists(Settings.TrashFolder))
+                Directory.CreateDirectory(Settings.TrashFolder);
             File.Move(OriginalFile.FullName, TrashFile.FullName);
         }
 
