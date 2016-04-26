@@ -17,14 +17,15 @@ namespace PaperPusher.Core.Tests.Operations
         {
             // arrange
             var file = Path.GetTempFileName();
-            var newFilename = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".tmp");
             var operation = new RenameAndMoveOperation(
                 new FileInfo(file),
-                new DirectoryInfo(Path.GetTempFileName()),
+                new DirectoryInfo(Path.GetTempPath()),
                 DateTimeGenerator.AnyDateBetween(
                     DateTimeGenerator.FirstDayOfThisMonth(),
                     DateTimeGenerator.LastDayOfThisMonth()),
                 Guid.NewGuid().ToString());
+            var newFilename = Path.Combine(
+                operation.TargetDirectory.FullName, operation.NewFilename);
 
             // assume
             File.Exists(file).ShouldBe(true);
@@ -43,14 +44,15 @@ namespace PaperPusher.Core.Tests.Operations
         {
             // arrange
             var file = Path.GetTempFileName();
-            var newFilename = Path.GetTempPath() + Guid.NewGuid() + ".tmp";
             var operation = new RenameAndMoveOperation(
                 new FileInfo(file),
-                new DirectoryInfo(Path.GetTempFileName()),
+                new DirectoryInfo(Path.GetTempPath()),
                 DateTimeGenerator.AnyDateBetween(
                     DateTimeGenerator.FirstDayOfThisMonth(),
                     DateTimeGenerator.LastDayOfThisMonth()),
-                Guid.NewGuid().ToString());
+               Guid.NewGuid().ToString());
+            var newFilename = Path.Combine(
+                operation.TargetDirectory.FullName, operation.NewFilename);
             operation.Do();
 
             // assume
