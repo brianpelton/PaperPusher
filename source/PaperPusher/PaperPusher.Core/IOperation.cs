@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PaperPusher
+namespace PaperPusher.Core
 {
     /// <summary>
     ///     A command / operation that can be performed and undone.

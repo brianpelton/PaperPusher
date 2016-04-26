@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace PaperPusher.Operations
+namespace PaperPusher.Core.Operations
 {
     /// <summary>
     /// Delete the given file.
@@ -15,7 +15,7 @@ namespace PaperPusher.Operations
         public DeleteOperation(FileInfo originalFile)
         {
             OriginalFile = originalFile;
-            var filename = Path.Combine(Settings.TrashFolder, originalFile.Name);
+            var filename = Path.Combine(Settings.TrashFolderPath, originalFile.Name);
             TrashFile = new FileInfo(filename);
         }
 
@@ -33,8 +33,6 @@ namespace PaperPusher.Operations
 
         public void Do()
         {
-            if (!Directory.Exists(Settings.TrashFolder))
-                Directory.CreateDirectory(Settings.TrashFolder);
             File.Move(OriginalFile.FullName, TrashFile.FullName);
         }
 
