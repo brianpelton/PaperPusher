@@ -123,7 +123,7 @@ namespace PaperPusher.ViewModels
             {
                 var action = new DeleteOperation(
                     SelectedSourceFile);
-                Session.DoOperation(action);
+                OperationsStack.DoOperation(action);
                 AfterAction();
             }
             catch (Exception ex)
@@ -140,7 +140,7 @@ namespace PaperPusher.ViewModels
                 var filename = Path.Combine(SelectedTargetDirectory.FullName, SelectedSourceFile.Name);
                 var newFile = new FileInfo(filename);
                 var operation = new MoveOperation(SelectedSourceFile, newFile);
-                Session.DoOperation(operation);
+                OperationsStack.DoOperation(operation);
 
                 AfterAction();
             }
@@ -153,7 +153,7 @@ namespace PaperPusher.ViewModels
 
         public void RedoLastUndo()
         {
-            Session.Redo();
+            OperationsStack.Redo();
             OnSourceDirectoryChanged();
         }
 
@@ -166,7 +166,7 @@ namespace PaperPusher.ViewModels
                 var fullFilename = Path.Combine(SelectedTargetDirectory.FullName, filename);
                 var newFile = new FileInfo(fullFilename);
                 var operation = new RenameAndMoveOperation(SelectedSourceFile, newFile);
-                Session.DoOperation(operation);
+                OperationsStack.DoOperation(operation);
 
                 AfterAction();
             }
@@ -179,7 +179,7 @@ namespace PaperPusher.ViewModels
 
         public void UndoLastOperation()
         {
-            Session.Undo();
+            OperationsStack.Undo();
             OnSourceDirectoryChanged();
         }
 

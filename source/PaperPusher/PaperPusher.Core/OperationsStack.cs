@@ -5,11 +5,11 @@ using log4net;
 
 namespace PaperPusher.Core
 {
-    public static class Session
+    public static class OperationsStack
     {
         #region [ Logging ]
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof (Session));
+        private static readonly ILog Log = LogManager.GetLogger(typeof (OperationsStack));
 
         #endregion
 
