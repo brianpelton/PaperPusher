@@ -159,13 +159,20 @@ namespace PaperPusher.ViewModels
 
         public void RenameAndMoveDocument()
         {
+            if (!DocumentDate.HasValue)
+                return;
+
             try
             {
-                var extension = Path.GetExtension(SelectedSourceFile.Name);
-                var filename = $"{DocumentDate:yyyy.MM.dd} - {DocumentTitle}{extension}";
-                var fullFilename = Path.Combine(SelectedTargetDirectory.FullName, filename);
-                var newFile = new FileInfo(fullFilename);
-                var operation = new RenameAndMoveOperation(SelectedSourceFile, newFile);
+                //var extension = Path.GetExtension(SelectedSourceFile.Name);
+                //var filename = $"{DocumentDate:yyyy.MM.dd} - {DocumentTitle}{extension}";
+                //var fullFilename = Path.Combine(SelectedTargetDirectory.FullName, filename);
+                //var newFile = new FileInfo(fullFilename);
+                var operation = new RenameAndMoveOperation(
+                    SelectedSourceFile,
+                    SelectedTargetDirectory,
+                    DocumentDate.Value,
+                    DocumentTitle);
                 OperationsStack.DoOperation(operation);
 
                 AfterAction();

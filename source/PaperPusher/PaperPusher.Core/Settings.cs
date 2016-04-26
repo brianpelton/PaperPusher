@@ -6,6 +6,8 @@ namespace PaperPusher.Core
     {
         #region [ Properties ]
 
+        public static string RenamePattern { get; set; }
+
         public static string TrashFolderPath { get; set; }
 
         #endregion
