@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperPusher", "PaperPusher\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperPusher.Core", "PaperPusher.Core\PaperPusher.Core.csproj", "{19138EF3-6500-4561-83CE-149FD5B5ECE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperPusher.Core.Tests", "PaperPusher.Core.Tests\PaperPusher.Core.Tests.csproj", "{59E7E925-CDC3-485C-8782-D6E4FF3D5342}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{19138EF3-6500-4561-83CE-149FD5B5ECE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19138EF3-6500-4561-83CE-149FD5B5ECE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19138EF3-6500-4561-83CE-149FD5B5ECE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59E7E925-CDC3-485C-8782-D6E4FF3D5342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59E7E925-CDC3-485C-8782-D6E4FF3D5342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59E7E925-CDC3-485C-8782-D6E4FF3D5342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59E7E925-CDC3-485C-8782-D6E4FF3D5342}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
