@@ -11,7 +11,7 @@
                      BorderThickness="2"
                      SaveWindowPosition="True"
                      WindowStartupLocation="CenterScreen"
-                     d:DesignHeight="300" d:DesignWidth="300">
+                     d:DesignHeight="600" d:DesignWidth="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -114,12 +114,14 @@
                     Background="{StaticResource AccentColorBrush}"
                     Margin="4"
                     FontSize="14"
-                    Content="Rename and Move" />
+                    Content="Rename and Move"
+                    Click="RenameAndMoveDocument_OnClick"/>
             <Button x:Name="DeleteDocument"
                     Grid.Row="1" Grid.Column="0"
                     Margin="4"
                     FontSize="14"
-                    Content="Delete" />
+                    Content="Delete"
+                    Click="DeleteDocument_OnClick"/>
             <Button x:Name="CreateDirectory"
                     Grid.Row="1" Grid.Column="1"
                     Margin="4"

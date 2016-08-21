@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace PaperPusher.Views
@@ -29,5 +30,17 @@ namespace PaperPusher.Views
         }
 
         #endregion
+
+        private void RenameAndMoveDocument_OnClick(object sender, RoutedEventArgs e)
+        {
+
+            TargetDirectories.Focus();
+        }
+
+        private void DeleteDocument_OnClick(object sender, RoutedEventArgs e)
+        {
+            TargetDirectories.Focus();
+
+        }
     }
 }
