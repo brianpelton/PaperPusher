@@ -60,7 +60,6 @@
         </DockPanel>
         <ListBox x:Name="SourceFiles"
                  Grid.Row="1" Grid.Column="0"
-                 SelectionChanged="SourceFiles_OnSelectionChanged"
                  ScrollViewer.CanContentScroll="False">
             <ListBox.ItemTemplate>
                 <DataTemplate>

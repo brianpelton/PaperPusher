@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace PaperPusher.Views
@@ -17,10 +16,14 @@ namespace PaperPusher.Views
 
         #region [ Methods ]
 
-        private void SourceFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void DeleteDocument_OnClick(object sender, RoutedEventArgs e)
         {
-            // this is okay, but it fires too early.
-            //ZoomBorder.Reset();
+            DocumentDate.Focus();
+        }
+
+        private void RenameAndMoveDocument_OnClick(object sender, RoutedEventArgs e)
+        {
+            DocumentDate.Focus();
         }
 
 
@@ -30,17 +33,5 @@ namespace PaperPusher.Views
         }
 
         #endregion
-
-        private void RenameAndMoveDocument_OnClick(object sender, RoutedEventArgs e)
-        {
-
-            TargetDirectories.Focus();
-        }
-
-        private void DeleteDocument_OnClick(object sender, RoutedEventArgs e)
-        {
-            TargetDirectories.Focus();
-
-        }
     }
 }
