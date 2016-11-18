@@ -241,7 +241,7 @@ namespace PaperPusher.ViewModels
 
             var settings = new MagickReadSettings
             {
-                Density = new Density(100, 100),
+                Density = new Density(150, 150),
                 FrameIndex = 0,
                 FrameCount = 1
             };
