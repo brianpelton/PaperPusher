@@ -4,7 +4,6 @@ using PropertyChanged;
 
 namespace PaperPusher.ViewModels
 {
-    [ImplementPropertyChanged]
     public class NewFolderViewModel : Screen
     {
         #region [ Constructors ]

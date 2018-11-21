@@ -19,7 +19,6 @@ using LogManager = log4net.LogManager;
 namespace PaperPusher.ViewModels
 {
     [Export(typeof (MainViewModel))]
-    [ImplementPropertyChanged]
     public class MainViewModel : Screen
     {
         #region [ Logging ]
