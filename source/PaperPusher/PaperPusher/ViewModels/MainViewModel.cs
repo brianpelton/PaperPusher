@@ -81,6 +81,9 @@ namespace PaperPusher.ViewModels
 
         public DirectoryInfo TargetRootDirectory { get; set; }
 
+        public bool CanUndoLastOperation { get { return OperationsStack.UndoOperations.Any(); } }
+        public bool CanRedoLastUndo { get { return OperationsStack.RedoOperations.Any(); } }
+
         #endregion
 
         #region [ Methods ]
@@ -158,6 +161,8 @@ namespace PaperPusher.ViewModels
         {
             OperationsStack.Redo();
             OnSourceDirectoryChanged();
+
+            RefreshUndoCommands();
         }
 
         public void RenameAndMoveDocument()
@@ -207,6 +212,8 @@ namespace PaperPusher.ViewModels
         {
             OperationsStack.Undo();
             OnSourceDirectoryChanged();
+
+            RefreshUndoCommands();
         }
 
         protected override void OnDeactivate(bool close)
@@ -233,6 +240,8 @@ namespace PaperPusher.ViewModels
 
             DocumentTitle = null;
             DocumentDate = null;
+
+            RefreshUndoCommands();
         }
 
         private DirectoryInfo ChooseDirectory()
@@ -357,6 +366,12 @@ namespace PaperPusher.ViewModels
 
             foreach (var directory in TargetRootDirectory.GetDirectories())
                 TargetDirectories.Add(directory);
+        }
+
+        private void RefreshUndoCommands()
+        {
+            NotifyOfPropertyChange(nameof(CanUndoLastOperation));
+            NotifyOfPropertyChange(nameof(CanRedoLastUndo));
         }
 
         #endregion
