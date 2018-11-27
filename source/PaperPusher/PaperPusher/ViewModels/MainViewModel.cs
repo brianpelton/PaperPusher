@@ -18,12 +18,12 @@ using LogManager = log4net.LogManager;
 
 namespace PaperPusher.ViewModels
 {
-    [Export(typeof (MainViewModel))]
+    [Export(typeof(MainViewModel))]
     public class MainViewModel : Screen
     {
         #region [ Logging ]
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof (MainViewModel));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(MainViewModel));
 
         #endregion
 
@@ -60,11 +60,15 @@ namespace PaperPusher.ViewModels
             }
         }
 
+        public bool CanShowNextPage { get { return CurrentPageNumber < TotalPageCount; } }
+        public bool CanShowPreviousPage { get { return CurrentPageNumber > 1; } }
         public DateTime? DocumentDate { get; set; }
         public string DocumentTitle { get; set; }
         public BitmapSource PreviewImage { get; private set; }
         public string PreviewImageFilename { get; private set; }
-        public int SelectedFilePageCount { get; private set; }
+        public int TotalPageCount { get; private set; }
+        public string PageCountDisplay => $"{CurrentPageNumber} / {TotalPageCount}";
+        public int CurrentPageNumber { get; set; }
         public FileInfo SelectedSourceFile { get; set; }
         public DirectoryInfo SelectedTargetDirectory { get; set; }
         public DirectoryInfo SourceDirectory { get; set; }
@@ -110,8 +114,8 @@ namespace PaperPusher.ViewModels
             RefreshDirectories();
 
             var folder = (from f in TargetDirectories
-                where f.Name == vm.FolderName
-                select f).FirstOrDefault();
+                          where f.Name == vm.FolderName
+                          select f).FirstOrDefault();
 
             SelectedTargetDirectory = folder;
         }
@@ -183,6 +187,22 @@ namespace PaperPusher.ViewModels
             }
         }
 
+        public void ShowNextPage()
+        {
+            var page = CurrentPageNumber + 1;
+            CurrentPageNumber = Math.Min(page, TotalPageCount);
+
+            DrawPdfPreviewImage();
+        }
+
+        public void ShowPreviousPage()
+        {
+            var page = CurrentPageNumber - 1;
+            CurrentPageNumber = Math.Max(page, 0);
+
+            DrawPdfPreviewImage();
+        }
+
         public void UndoLastOperation()
         {
             OperationsStack.Undo();
@@ -232,16 +252,12 @@ namespace PaperPusher.ViewModels
             return directory;
         }
 
-        private async void OnSelectedSourceFileChanged()
+        private async void DrawPdfPreviewImage()
         {
-            if (SelectedSourceFile == null ||
-                !SelectedSourceFile.Exists)
-                return;
-
             var settings = new MagickReadSettings
             {
                 Density = new Density(150, 150),
-                FrameIndex = 0,
+                FrameIndex = CurrentPageNumber - 1,
                 FrameCount = 1
             };
 
@@ -264,18 +280,18 @@ namespace PaperPusher.ViewModels
                     Log.Warn("Unable to preview document.", ex);
                     PreviewImage = null;
                     PreviewImageFilename = null;
-                    SelectedFilePageCount = 0;
+                    TotalPageCount = 0;
                 }
 
                 try
                 {
                     using (var pdfReader = new PdfReader(SelectedSourceFile.FullName))
-                        SelectedFilePageCount = pdfReader.NumberOfPages;
+                        TotalPageCount = pdfReader.NumberOfPages;
                 }
                 catch (Exception ex)
                 {
                     Log.Warn("Unable to count pages.", ex);
-                    SelectedFilePageCount = 0;
+                    TotalPageCount = 0;
                 }
             });
 
@@ -301,6 +317,17 @@ namespace PaperPusher.ViewModels
                     Log.Error("Error showing unknown file icon.", ex);
                 }
             }
+        }
+
+        private void OnSelectedSourceFileChanged()
+        {
+            if (SelectedSourceFile == null ||
+                !SelectedSourceFile.Exists)
+                return;
+
+            CurrentPageNumber = 1;
+
+            DrawPdfPreviewImage();
         }
 
         private void OnSourceDirectoryChanged()
