@@ -15,6 +15,7 @@ using PaperPusher.Core.Operations;
 using PropertyChanged;
 using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;
+using iTextSharp.text;
 
 namespace PaperPusher.ViewModels
 {
@@ -60,18 +61,26 @@ namespace PaperPusher.ViewModels
             }
         }
 
+
+        public bool CanResetSplit => CurrentPageNumber != 0;
+        public bool CanRedoLastUndo { get { return OperationsStack.RedoOperations.Any(); } }
+        public bool CanSplitToCurrentPage => CurrentPageNumber != 0;
+        public bool CanSplitToPreviousPage => CurrentPageNumber > 1;
         public bool CanShowNextPage { get { return CurrentPageNumber < TotalPageCount; } }
         public bool CanShowPreviousPage { get { return CurrentPageNumber > 1; } }
+        public bool CanUndoLastOperation { get { return OperationsStack.UndoOperations.Any(); } }
+        public int CurrentPageNumber { get; set; }
         public DateTime? DocumentDate { get; set; }
         public string DocumentTitle { get; set; }
+        public bool MoveToNextPageOnSplit { get; set; } = true;
+        public string PageCountDisplay => $"{CurrentPageNumber} / {TotalPageCount}";
         public BitmapSource PreviewImage { get; private set; }
         public string PreviewImageFilename { get; private set; }
         public int TotalPageCount { get; private set; }
-        public string PageCountDisplay => $"{CurrentPageNumber} / {TotalPageCount}";
-        public int CurrentPageNumber { get; set; }
         public FileInfo SelectedSourceFile { get; set; }
         public DirectoryInfo SelectedTargetDirectory { get; set; }
         public DirectoryInfo SourceDirectory { get; set; }
+        private int? SplitStartPageNumber { get; set; }
 
         public BindingList<FileInfo> SourceFiles { get; protected set; }
             = new BindingList<FileInfo>();
@@ -80,9 +89,6 @@ namespace PaperPusher.ViewModels
             = new BindingList<DirectoryInfo>();
 
         public DirectoryInfo TargetRootDirectory { get; set; }
-
-        public bool CanUndoLastOperation { get { return OperationsStack.UndoOperations.Any(); } }
-        public bool CanRedoLastUndo { get { return OperationsStack.RedoOperations.Any(); } }
 
         #endregion
 
@@ -261,6 +267,73 @@ namespace PaperPusher.ViewModels
             return directory;
         }
 
+        public void ResetSplit()
+        {
+            SplitStartPageNumber = CurrentPageNumber;
+        }
+
+        public void SplitToCurrentPage()
+        {
+            SplitPages(SplitStartPageNumber.Value, CurrentPageNumber);
+            SplitStartPageNumber = CurrentPageNumber + 1;
+
+            if (MoveToNextPageOnSplit)
+                ShowNextPage();
+        }
+
+        public void SplitToPreviousPage()
+        {
+            SplitPages(SplitStartPageNumber.Value, CurrentPageNumber - 1);
+            SplitStartPageNumber = CurrentPageNumber;
+
+            if (MoveToNextPageOnSplit)
+                ShowNextPage();
+        }
+
+        private void SplitPages(int startPage, int endPage)
+        {
+            if (endPage < startPage)
+            {
+                Log.Warn("Split end is before split start.");
+                return;
+            }
+
+            try
+            {
+                var documentFilename = Path.GetFileNameWithoutExtension(SelectedSourceFile.Name);
+                var newFilename = Path.Combine(SelectedSourceFile.DirectoryName, $"{documentFilename} - {startPage} to {endPage}.pdf");
+
+                // Intialize a new PdfReader instance with the contents of the source Pdf file:
+                var reader = new PdfReader(SelectedSourceFile.FullName);
+
+                // For simplicity, I am assuming all the pages share the same size
+                // and rotation as the first page:
+                var sourceDocument = new Document(reader.GetPageSizeWithRotation(CurrentPageNumber));
+
+                // Initialize an instance of the PdfCopyClass with the source 
+                // document and an output file stream:
+                var pdfCopyProvider = new PdfCopy(sourceDocument,
+                    new FileStream(newFilename, FileMode.Create));
+
+                sourceDocument.Open();
+
+                // Walk the specified range and add the page copies to the output file:
+                for (int i = startPage; i <= endPage; i++)
+                {
+                    var importedPage = pdfCopyProvider.GetImportedPage(reader, i);
+                    pdfCopyProvider.AddPage(importedPage);
+                }
+                sourceDocument.Close();
+                reader.Close();
+
+                SourceFiles.Add(new FileInfo(newFilename));
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error splitting PDF", ex);
+            }
+        }
+
         private async void DrawPdfPreviewImage()
         {
             var settings = new MagickReadSettings
@@ -335,6 +408,7 @@ namespace PaperPusher.ViewModels
                 return;
 
             CurrentPageNumber = 1;
+            SplitStartPageNumber = 1;
 
             DrawPdfPreviewImage();
         }
