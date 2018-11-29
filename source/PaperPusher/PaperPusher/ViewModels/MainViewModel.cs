@@ -343,11 +343,11 @@ namespace PaperPusher.ViewModels
             {
                 try
                 {
-                    IPdfRenderer previewRenderer = new MagickRenderer //new GhostscriptRenderer
+                    IPdfRenderer previewRenderer = new GhostscriptRenderer //new MagickRenderer
                     {
-                        Page = CurrentPageNumber,
                         Density = 150,
-                        PreviewFilename = filename
+                        OutputFilename = filename,
+                        PageNumber = CurrentPageNumber
                     };
                     previewRenderer.Render(SelectedSourceFile.FullName);
                 }
