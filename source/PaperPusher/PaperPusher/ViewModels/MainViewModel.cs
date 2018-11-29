@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
-using iTextSharp.text.pdf;
 using ImageMagick;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using PaperPusher.Core;
 using PaperPusher.Core.Operations;
-using PropertyChanged;
 using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;
 using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace PaperPusher.ViewModels
 {
@@ -72,6 +71,7 @@ namespace PaperPusher.ViewModels
         public int CurrentPageNumber { get; set; }
         public DateTime? DocumentDate { get; set; }
         public string DocumentTitle { get; set; }
+        public bool HasSearchableText { get; private set; }
         public bool MoveToNextPageOnSplit { get; set; } = true;
         public string PageCountDisplay => $"{CurrentPageNumber} / {TotalPageCount}";
         public BitmapSource PreviewImage { get; private set; }
@@ -336,6 +336,8 @@ namespace PaperPusher.ViewModels
 
         private async void DrawPdfPreviewImage()
         {
+            PreviewImage = null;
+
             var settings = new MagickReadSettings
             {
                 Density = new Density(150, 150),
@@ -368,7 +370,13 @@ namespace PaperPusher.ViewModels
                 try
                 {
                     using (var pdfReader = new PdfReader(SelectedSourceFile.FullName))
+                    {
                         TotalPageCount = pdfReader.NumberOfPages;
+
+                        var text = iTextSharp.text.pdf.parser.PdfTextExtractor.GetTextFromPage(pdfReader, 1);
+                        HasSearchableText = !string.IsNullOrEmpty(text);
+                        NotifyOfPropertyChange(nameof(HasSearchableText));
+                    }
                 }
                 catch (Exception ex)
                 {

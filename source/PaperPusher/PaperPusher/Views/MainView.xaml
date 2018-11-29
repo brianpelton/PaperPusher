@@ -6,12 +6,16 @@
                      xmlns:mahapps="http://metro.mahapps.com/winfx/xaml/controls"
                      xmlns:controls="clr-namespace:PaperPusher.Controls"
                      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                     xmlns:converters="clr-namespace:PaperPusher.Converters"
                      mc:Ignorable="d"
                      BorderBrush="{DynamicResource AccentColorBrush}"
                      BorderThickness="2"
                      SaveWindowPosition="True"
                      WindowStartupLocation="CenterScreen"
                      d:DesignHeight="600" d:DesignWidth="900">
+    <mahapps:MetroWindow.Resources>
+        <converters:BoolToBrushColorConverter x:Key="BoolToBrushColorConverter" />
+    </mahapps:MetroWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -45,7 +49,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
+
             <TextBox x:Name="SelectedSourceFile_Name"
                  Grid.Column="0"
                      Grid.Row="0"
@@ -113,14 +117,15 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <controls:ZoomBorder x:Name="ZoomBorder"
-                             Grid.Row="1" Grid.Column="1"
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="{Binding HasSearchableText, Converter={StaticResource BoolToBrushColorConverter}}" BorderThickness="3">
+            <controls:ZoomBorder x:Name="ZoomBorder"
                              ClipToBounds="True"
                              Margin="10"
                              Background="Gray">
-            <Image Source="{Binding Path=PreviewImage, NotifyOnTargetUpdated=True}"
+                <Image Source="{Binding Path=PreviewImage, NotifyOnTargetUpdated=True}"
                    Binding.TargetUpdated="zoomBorder_TargetUpdated" />
-        </controls:ZoomBorder>
+            </controls:ZoomBorder>
+        </Border>
         <ListBox x:Name="TargetDirectories"
                  Grid.Row="1" Grid.Column="2">
             <ListBox.ItemTemplate>

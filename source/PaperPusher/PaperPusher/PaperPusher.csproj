@@ -104,6 +104,7 @@
     <Compile Include="ApplicationBootstrapper.cs" />
     <Compile Include="Controls\ZoomBorder.cs" />
     <Compile Include="CaliburnLog4netLogger.cs" />
+    <Compile Include="Converters\BoolToBrushColorConverter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\SendFileToRecycleBin.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
