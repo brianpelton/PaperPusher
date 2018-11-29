@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
-using ImageMagick;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using PaperPusher.Core;
 using PaperPusher.Core.Operations;
@@ -15,6 +14,7 @@ using ILog = log4net.ILog;
 using LogManager = log4net.LogManager;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using PaperPusher.Core.PdfRendering;
 
 namespace PaperPusher.ViewModels
 {
@@ -338,26 +338,18 @@ namespace PaperPusher.ViewModels
         {
             PreviewImage = null;
 
-            var settings = new MagickReadSettings
-            {
-                Density = new Density(150, 150),
-                FrameIndex = CurrentPageNumber - 1,
-                FrameCount = 1
-            };
-
-            var filename = Path.GetTempFileName();
+            string filename = Path.GetTempFileName();
             await Task.Run(() =>
             {
                 try
                 {
-                    using (var images = new MagickImageCollection())
+                    IPdfRenderer previewRenderer = new MagickRenderer //new GhostscriptRenderer
                     {
-                        images.Read(SelectedSourceFile, settings);
-
-                        var image = images.First();
-                        image.Format = MagickFormat.Jpeg;
-                        images.Write(filename);
-                    }
+                        Page = CurrentPageNumber,
+                        Density = 150,
+                        PreviewFilename = filename
+                    };
+                    previewRenderer.Render(SelectedSourceFile.FullName);
                 }
                 catch (Exception ex)
                 {
