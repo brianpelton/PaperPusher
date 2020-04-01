@@ -343,7 +343,7 @@ namespace PaperPusher.ViewModels
             {
                 try
                 {
-                    IPdfRenderer previewRenderer = new GhostscriptRenderer //new MagickRenderer
+                    IPdfRenderer previewRenderer = new IronPdfRenderer
                     {
                         Density = 150,
                         OutputFilename = filename,
